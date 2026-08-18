@@ -97,6 +97,28 @@
             color: var(--accent);
         }
 
+        /* Name tag */
+        .name-tag {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .name-tag h1 {
+            font-size: 4rem;
+            font-weight: 700;
+            letter-spacing: -2px;
+            background: linear-gradient(135deg, var(--text) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .name-tag p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
         /* Hero */
         .hero {
             max-width: 1200px;
@@ -307,6 +329,7 @@
     </header>
 
     <main>
+        <div class="name-tag">Louis Micheal Obam</div>
         <section class="hero">
             <h1>Understanding <span>Content</span> Decay</h1>
             <p>An analysis of search visibility signals using FlyRank's real search data warehouse, training random forest models to predict declining content and recommend prioritized review actions.</p>
