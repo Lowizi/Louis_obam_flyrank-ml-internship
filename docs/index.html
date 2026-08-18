@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Capstone Research Paper - Search Intelligence</title>
+    <style>
+        :root {
+            --bg: #0a0e17;
+            --bg-secondary: #111827;
+            --card: #1a2234;
+            --accent: #0d9488;
+            --accent-hover: #0f766e;
+            --text: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: #334155;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --purple: #8b5cf6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* Background */
+        .bg-pattern {
+            position: fixed;
+            inset: 0;
+            background: 
+                radial-gradient(ellipse 100% 60% at 50% -10%, rgba(13,148,136,0.18), transparent 50%),
+                radial-gradient(ellipse 80% 50% at 100% 50%, rgba(13,148,136,0.12), transparent 50%),
+                linear-gradient(180deg, var(--bg) 0%, var(--bg-secondary) 100%);
+            z-index: -1;
+        }
+
+        .grid-overlay {
+            position: fixed;
+            inset: 0;
+            background-image: 
+                linear-gradient(var(--border) 1px, transparent) 0 0,
+                linear-gradient(90deg, var(--border) 1px, transparent) 0 0;
+            background-size: 60px 60px;
+            opacity: 0.12;
+            z-index: -1;
+        }
+
+        /* Reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            .bg-pattern { animation: none; }
+        }
+
+        /* Header */
+        header {
+            padding: 2rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent);
+            text-decoration: none;
+            letter-spacing: 0.5px;
+        }
+
+        .nav {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.875rem;
+            transition: color 0.2s;
+        }
+
+        .nav a:hover {
+            color: var(--accent);
+        }
+
+        /* Hero */
+        .hero {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 6rem 2rem 2rem;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            letter-spacing: -1px;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--text) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero h1 span {
+            color: var(--accent);
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            max-width: 680px;
+            margin: 0 auto 3rem;
+        }
+
+        .hero .lane-badge {
+            display: inline-block;
+            background: var(--card);
+            padding: 0.6rem 1.2rem;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            margin-top: 1rem;
+            letter-spacing: 0.5px;
+        }
+
+        /* Sections */
+        .section {
+            max-width: 1200px;
+            margin: 5rem auto;
+            padding: 0 2rem;
+        }
+
+        .section h2 {
+            font-size: 2.25rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--border);
+            color: var(--text);
+        }
+
+        .section h3 {
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+            color: var(--accent);
+        }
+
+        /* Abstract Card */
+        .abstract-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .abstract-card h3 {
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        .abstract-card p {
+            color: var(--text-muted);
+            margin-bottom: 0.75rem;
+            font-size: 0.975rem;
+        }
+
+        /* Metrics */
+        .metrics {
+            display: flex;
+            gap: 2rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .metric {
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 2.75rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .metric-label {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+
+        /* Table */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .data-table th {
+            background: var(--card);
+            color: var(--accent);
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        .data-table tr:hover td {
+            background: var(--bg-secondary);
+        }
+
+        /* Lists */
+        .recommendations-list {
+            list-style: none;
+        }
+
+        .recommendations-list li {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.25rem 1.5rem;
+            margin: 0.75rem 0;
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+
+        .recommendations-list li::before {
+            content: '✓';
+            color: var(--success);
+            font-weight: bold;
+            font-size: 1.1rem;
+            min-width: 24px;
+            flex-shrink: 0;
+        }
+
+        .recommendations-list span {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        /* Badge */
+        .badge {
+            display: inline-block;
+            background: var(--purple);
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: 0.5rem;
+        }
+
+        /* Footer */
+        footer {
+            padding: 3rem 2rem;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .metrics { gap: 1rem; }
+            .metric-value { font-size: 1.75rem; }
+            .nav { display: none; }
+            .section { margin: 3rem auto; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-pattern"></div>
+    <div class="grid-overlay"></div>
+
+    <header>
+        <div class="header-container">
+            <a href="#" class="logo">FlyRank Capstone</a>
+            <nav class="nav">
+                <a href="#abstract">Paper</a>
+                <a href="#methods">Methods</a>
+                <a href="#results">Results</a>
+                <a href="#recommendations">Recommendations</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <h1>Understanding <span>Content</span> Decay</h1>
+            <p>An analysis of search visibility signals using FlyRank's real search data warehouse, training random forest models to predict declining content and recommend prioritized review actions.</p>
+            <span class="lane-badge">Refresh / Content Opportunity Scoring Lane</span>
+        </section>
+
+        <!-- Abstract -->
+        <div class="section" id="abstract">
+            <div class="abstract-card">
+                <h3>Abstract</h3>
+                <p><strong>Question:</strong> Which safe content/search signals are associated with visibility decline in search results?</p>
+                <p><strong>Method:</strong> Trained a Random Forest classifier on 30,000 pages from FlyRank's anonymized warehouse, using client-holdout validation (GroupKFold across all 32 clients) to avoid leakage.</p>
+                <p><strong>Result:</strong> Model achieves P@50=0.58 against a 0.54 base rate — a modest but directional lift. Key drivers: engagement_rate, ctr, and log_impressions. 11/18 features overlap the 30-day label window (documented leakage risk).</p>
+            </div>
+        </div>
+
+        <!-- Methods -->
+        <div class="section" id="methods">
+            <h2>Methodology</h2>
+            <h3>Problem Statement</h3>
+            <p>Determining which pages are in decline and should be prioritized for content review or refresh — without client-identifying data or causal claims about Google's algorithm.</p>
+
+            <h3>Data</h3>
+            <ul>
+                <li>Release: FlyRank ML Internship dataset — content_refresh_anonymized.csv</li>
+                <li>Size: 30,000+ rows after filtering (impressions_90d > 0, content_age_days >= 90)</li>
+                <li>Date window: Snapshot from — excluded pages younger than 90 days and zero-traffic pages</li>
+                <li>Exclusions: client-identifying fields removed; trend_pct, trend_direction, and other label siblings excluded as features</li>
+            </ul>
+
+            <h3>Features</h3>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h4>engagement_rate</h4>
+                    <p>30-day engagement rate — top predictor of decline</p>
+                </div>
+                <div class="feature-card">
+                    <h4>ctr</h4>
+                    <p>Click-through rate from search impressions</p>
+                </div>
+                <div class="feature-card">
+                    <h4>log_impressions_90d</h4>
+                    <p>Cumulative search visibility over 90 days</p>
+                </div>
+                <div class="feature-card">
+                    <h4>content_age_days</h4>
+                    <p>Age of content in days — older pages show different patterns</p>
+                </div>
+                <div class="feature-card">
+                    <h4>avg_position</h4>
+                    <p>Average search position — declining positions correlate with decline label</p>
+                </div>
+                <div class="feature-card">
+                    <h4>ai_traffic_pct</h4>
+                    <p>Percentage of traffic from AI referrals — sparse but informative</p>
+                </div>
+            </div>
+
+            <h3>Label Definition</h3>
+            <p><strong>is_declining = (trend_direction == "down")</strong> — computed from 30-day vs previous 30-day impression change. Same-window proxy: the label and many features use overlapping 30-day windows.</p>
+
+            <h3>Baseline</h3>
+            <p>Week-4 rule: <code>stale * visible * log1p(impressions)</code> where stale = content_age_days >= 180, visible = impressions_90d >= 500. Baseline P@50 ≈ 0.38 on same split.</p>
+
+            <h3>Validation Design</h3>
+            <ul>
+                <li>GroupKFold by client_id — all 32 clients rotated through test once</li>
+                <li>Honest cross-client estimate (no single-draw optimism)</li>
+                <li>Compared against naive random-row split (inflates P@50 to 0.98 by leaking clients)</li>
+            </ul>
+
+            <h3>Leakage Checks</h3>
+            <p>11 of 18 numeric features are 30/90-day aggregates that overlap the label's 30-day window. Reported as "legal to measure but window mismatch means model can learn trend direction from same window that produced it." Deliberately added raw trend_pct — score jumped to avg_pr=1.0, confirming the leak risk.</p>
+        </div>
+
+        <!-- Results -->
+        <div class="section" id="results">
+            <h2>Results</h2>
+
+            <h3>Model vs Baseline Comparison (GroupKFold, all 32 clients)</h3>
+            <div class="metrics">
+                <div class="metric">
+                    <div class="metric-value">0.58</div>
+                    <div class="metric-label">P@50 (Random Forest)</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value">0.54</div>
+                    <div class="metric-label">Base Rate</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value">0.38</div>
+                    <div class="metric-label">Week-4 Baseline P@50</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value">0.69</div>
+                    <div class="metric-label">ROC-AUC (RF)</div>
+                </div>
+            </div>
+
+            <div class="chart-placeholder">
+                <span>Chart: Precision@K across different K values (P@20, P@50, P@100)</span>
+            </div>
+
+            <h3>Key Findings</h3>
+            <ul>
+                <li>The random forest consistently outperforms the Week-4 baseline (0.58 vs 0.38 P@50) on the same grouped split</li>
+                <li>Logistic regression lags behind — the problem is non-linear (as expected)</li>
+                <li>Feature importance: engagement_rate > ctr > log_impressions drive predictions</li>
+                <li>Model errors: over-flagging old high-traffic pages (FP), under-flagging declining pages with good surface metrics (FN)</li>
+            </ul>
+
+            <h3>Base Rate Context</h3>
+            <p>Every metric must be read against the 0.54 base rate. A P@50 of 0.58 represents a modest but meaningful directional lift — not a landslide. The naive random-row split would inflate this to 0.98 by allowing client leakage.</p>
+        </div>
+
+        <!-- Limitations -->
+        <div class="section" id="limitations">
+            <h2>Limitations & Honest Framing</h2>
+
+            <ul>
+                <li><strong>Cross-sectional, not longitudinal:</strong> The model predicts "currently declining" not "will decline after refresh." Same-30-day window label limits future behavior prediction.</li>
+                <li><strong>Single-draw optimism:</strong> W5's reported P@50=0.74 came from one client-holdout draw of 6 clients. The honest GroupKFold estimate across all 32 clients is P@50=0.58.</li>
+                <li><strong>Survivor bias:</strong> Pages that remain in the snapshot at 365+ days are survivors — may not represent all old pages.</li>
+                <li><strong>Label overlap leak:</strong> 11/18 features aggregate over windows that overlap the 30-day label formation window. Numbers are directional, not causal.</li>
+                <li><strong>No causal claims:</strong> Observed associations ≠ refresh will recover traffic. The data shows correlation, not Google algorithm causality.</li>
+            </ul>
+
+            <p class="subtle">Writing the limitations section before a reader does is what earns trust. Negative results are results — "we expected X; the data shows no such pattern" is a valid and respect-earning sentence.</p>
+        </div>
+
+        <!-- Recommendations -->
+        <div class="section" id="recommendations">
+            <h2>Ranked Recommendations</h2>
+
+            <ol class="recommendations-list">
+                <li>
+                    <span>Prioritize pages with low engagement_rate AND high content_age_days</span>
+                    <div>These are the highest-risk pages — old content that isn't engaging. Schedule a content review within 30 days.</div>
+                </li>
+                <li>
+                    <span>Flag pages with declining ctr but still-high impressions</span>
+                    <div>High-traffic pages losing clicks need immediate metadata review (title tags, meta descriptions).</div>
+                </li>
+                <li>
+                    <span>Monitor pages where log_impressions_90d is decreasing</span>
+                    <div>Visibility is dropping even if still high — early intervention before position degrades further.</div>
+                </li>
+                <li>
+                    <span>Review pages with ai_traffic_pct > 0 but low overall engagement</span>
+                    <div>AI referral traffic is sparse — these pages may need specialized content strategy, not generic refresh.</div>
+                </li>
+                <li>
+                    <span>Prune or merge very old pages (< 365 days) with zero 90-day traffic</span>
+                    <div>No survivor bias concern — these pages already have no traffic. Consider consolidation or removal.</div>
+                </li>
+            </ol>
+
+            <p><strong>Confidence levels:</strong> High for engagement_rate and ctr signals (observed patterns). Medium for age-based rules (directional, not causal). Low for AI-traffic-specific recommendations (sparse data, needs more study).</p>
+        </div>
+
+        <!-- Reproducibility -->
+        <div class="section" id="reproducibility">
+            <h2>Reproducibility</h2>
+
+            <ul>
+                <li><strong>Notebooks:</strong> All weekly assignments in <code>work/notebooks/</code> — from research question (W1) through capstone (W11)</li>
+                <li><strong>Repository:</strong> GitHub repo contains full pipeline scripts in <code>scripts/</code> and data preparation notebooks</li>
+                <li><strong>Random seeds:</strong> RANDOM_STATE = 42 used consistently across all model training and splits</li>
+                <li><strong>Re-run commands:</strong>
+                    <pre><code>pip install -r requirements.txt
+python -m work/notebooks/w03_data_contract.ipynb
+python -m work/notebooks/w05_model.ipynb
+python -m work/notebooks/w07_action_playbook.ipynb
+python -m work/capstone.ipynb</code></pre>
+                </li>
+                <li><strong>Environment:</strong> See <code>requirements.txt</code> for package versions; key dependencies: pandas, numpy, scikit-learn, duckdb</li>
+            </ul>
+
+            <p>Someone with a fresh clone should be able to re-run everything from your instructions alone. Fix random seeds and note them in your report.</p>
+        </div>
+    </main>
+
+    <footer>
+        <p>Built on the FlyRank ML Internship dataset — https://flyrank.ai</p>
+        <p>2026 Capstone Research Paper • Decision-Support Models for Content Refresh Prioritization</p>
+    </footer>
+</body>
+</html>
